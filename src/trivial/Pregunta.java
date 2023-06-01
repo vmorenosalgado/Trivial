@@ -3,7 +3,6 @@ package trivial;
 public class Pregunta {
     private String pregunta;
     private boolean respuesta;
-
     private int dificultad;
 
     public Pregunta(String pregunta, boolean respuesta, int dificultad) {
@@ -35,4 +34,6 @@ public class Pregunta {
     public void setDificultad(int dificultad) {
         this.dificultad = dificultad;
     }
+
+
 }

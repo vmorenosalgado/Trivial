@@ -1,26 +1,36 @@
 package trivial;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class Partida {
-    private List<Pregunta> preguntas;
+    private List<Pregunta>  preguntas;
+
+    private Jugador jugador;
+
+
 
     public Partida() {
 
         preguntas = new ArrayList<>();
+        jugador = new Jugador();
 
-        Pregunta p1 = new Pregunta("La capital de Francia es París", true, 2);
+        Pregunta p1 = new Pregunta("¿La capital de Francia es París?", true, 2);
         preguntas.add(p1);
-        Pregunta p2 = new Pregunta("La capital de España es Madrid", true, 2);
+
+        Pregunta p2 = new Pregunta("¿La capital de España es Madrid?", true, 2);
         preguntas.add(p2);
-        Pregunta p3 = new Pregunta("La capital de Inglaterra es Londres", false, 2);
+
+        Pregunta p3 = new Pregunta("¿La capital de Inglaterra es Liverpool?", false, 2);
         preguntas.add(p3);
-        Pregunta p4 = new Pregunta("La capital de Andalucia es Sevilla", true, 2);
+
+        Pregunta p4 = new Pregunta("¿La capital de Italia es Pisa?", false, 2);
         preguntas.add(p4);
-        Pregunta p5 = new Pregunta("La capital de Alemania es Munich", false, 2);
+
+        Pregunta p5 = new Pregunta("¿La capital de Alemania es Berlín?", true, 2);
         preguntas.add(p5);
+
+        Collections.shuffle(preguntas);
 
     }
 
@@ -28,6 +38,8 @@ public class Partida {
         Scanner scanner = new Scanner(System.in);
 
         String respuesta;
+
+        solicitudDatosJugador();
 
         for (int i = 0; i < preguntas.size(); i++ ){
 
@@ -41,29 +53,46 @@ public class Partida {
                 if(!respuesta.equals("V") && !respuesta.equals("F"))
                     System.out.println("La opción es incorrecta. Escoja V o F");
                 else {
-                    validar(respuesta, pregunta.isRespuesta());
+                    validar(respuesta, pregunta);
                 }
 
-            }while(respuesta);
+            }while(!respuesta.equals("V") && !respuesta.equals("F"));
 
         }
 
-
+        estadistica();
 
     }
 
-    private void validar(String respuesta, boolean respuesta1) {
-        if (respuesta.equals("V") && respuesta1) { //V -> false
+    private void validar(String respuesta, Pregunta pregunta) {
+        if ("V".equals(respuesta) && pregunta.isRespuesta()) { //V ->
             // recpuesta correcta
             System.out.println("Acierto");
-        } else if (respuesta.equals("F") && !respuesta1) {
+            jugador.setPuntuacion(jugador.getPuntuacion() + pregunta.getDificultad());
+            jugador.setNumeroAciertos(jugador.getNumeroAciertos() + 1);
+        } else if ("F".equals(respuesta) && !pregunta.isRespuesta()) {
             // recpuesta correcta.
             System.out.println("Acierto");
-        } else
+            jugador.setPuntuacion(jugador.getPuntuacion() + pregunta.getDificultad());
+            jugador.setNumeroAciertos(jugador.getNumeroAciertos() + 1);
+        } else {
             System.out.println("Fallo");
+            jugador.setNumeroFallos(jugador.getNumeroFallos() + 1);
+        }
     }
 
+    private void estadistica(){
+        System.out.println("Has acertado " + jugador.getNumeroAciertos() + " preguntas de " + preguntas.size());
+        System.out.println("Has fallado " + jugador.getNumeroFallos());
+        System.out.println("Tu puntuacion es " + jugador.getPuntuacion());
 
+    }
+    private void solicitudDatosJugador(){
+        Scanner scanner = new Scanner(System.in);
 
-
+        System.out.print("Introduce tu nombre: ");
+        jugador.setNombre(scanner.next());
+        System.out.print("Introduce un usuario: ");
+        jugador.setUsuario(scanner.next());
+    }
 }
